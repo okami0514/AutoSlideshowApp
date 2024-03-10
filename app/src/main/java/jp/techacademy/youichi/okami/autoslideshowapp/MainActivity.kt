@@ -7,9 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
+import android.widget.Button
 import jp.techacademy.youichi.okami.autoslideshowapp.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -26,6 +28,25 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        // 各ボタンの処理実装
+        // 進む
+        val button1 = findViewById<Button>(R.id.button1)
+        button1.setOnClickListener{
+            Log.d("UI_PARTS", "ボタンをタップしました")
+        }
+
+        // 戻る
+        val button2 = findViewById<Button>(R.id.button2)
+        button2.setOnClickListener{
+
+        }
+
+        // 再生/停止
+        val button3 = findViewById<Button>(R.id.button3)
+        button3.setOnClickListener{
+
+        }
+
         // パーミッションの許可状態を確認する
         if (checkSelfPermission(readImagesPermission) == PackageManager.PERMISSION_GRANTED) {
             // 許可されている
@@ -37,6 +58,10 @@ class MainActivity : AppCompatActivity() {
                 PERMISSIONS_REQUEST_CODE
             )
         }
+    }
+
+    override fun onClick(v: View) {
+
     }
 
     override fun onRequestPermissionsResult(
