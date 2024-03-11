@@ -28,6 +28,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val view = binding.root
         setContentView(view)
 
+        // パーミッションの許可状態を確認する
+        if (checkSelfPermission(readImagesPermission) == PackageManager.PERMISSION_GRANTED) {
+            // 許可されている
+            getContentsInfo()
+        } else {
+            // 許可されていないので許可ダイアログを表示する
+            requestPermissions(
+                arrayOf(readImagesPermission),
+                PERMISSIONS_REQUEST_CODE
+            )
+        }
+
         // 各ボタンの処理実装
         // 進む
         val button1 = findViewById<Button>(R.id.button1)
@@ -45,18 +57,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val button3 = findViewById<Button>(R.id.button3)
         button3.setOnClickListener{
 
-        }
-
-        // パーミッションの許可状態を確認する
-        if (checkSelfPermission(readImagesPermission) == PackageManager.PERMISSION_GRANTED) {
-            // 許可されている
-            getContentsInfo()
-        } else {
-            // 許可されていないので許可ダイアログを表示する
-            requestPermissions(
-                arrayOf(readImagesPermission),
-                PERMISSIONS_REQUEST_CODE
-            )
         }
     }
 
