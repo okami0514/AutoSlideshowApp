@@ -6,11 +6,13 @@ import android.database.Cursor
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import jp.techacademy.youichi.okami.autoslideshowapp.databinding.ActivityMainBinding
+import java.util.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -19,6 +21,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val PERMISSIONS_REQUEST_CODE = 100
 
     private var cursor: Cursor? = null
+
+    private var timer: Timer? = null
+    // タイマー用の時間のための変数
+    private var seconds = 0.0
+    private var handler = Handler(Looper.getMainLooper())
 
     // APIレベルによって許可が必要なパーミッションを切り替える
     private val readImagesPermission =
@@ -96,10 +103,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
 
-        // 再生/停止
+        // 再生
         val button3 = findViewById<Button>(R.id.button3)
         button3.setOnClickListener{
+            // 進む、戻るボタン非活性
+            val button1 = findViewById<Button>(R.id.button1)
+            button1.isClickable = false
 
+            val button2 = findViewById<Button>(R.id.button2)
+            button2.isClickable = false
         }
     }
 
