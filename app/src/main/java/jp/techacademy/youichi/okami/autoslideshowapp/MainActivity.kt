@@ -73,8 +73,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         // 戻る
         val button2 = findViewById<Button>(R.id.button2)
         button2.setOnClickListener{
-            if (cursor!!.isLast) {
-                if (cursor!!.moveToFirst()) {
+            if (cursor!!.isFirst) {
+                if (cursor!!.moveToLast()) {
                     // indexからIDを取得し、そのIDから画像のURIを取得する
                     val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
                     val id = cursor!!.getLong(fieldIndex)
@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     binding.imageView.setImageURI(imageUri)
                 }
             } else {
-                if (cursor!!.moveToNext()) {
+                if (cursor!!.moveToPrevious()) {
                     // indexからIDを取得し、そのIDから画像のURIを取得する
                     val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
                     val id = cursor!!.getLong(fieldIndex)
