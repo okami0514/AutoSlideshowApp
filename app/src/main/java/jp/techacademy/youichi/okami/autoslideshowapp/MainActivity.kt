@@ -49,7 +49,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         button1.setOnClickListener{
             Log.d("UI_PARTS", "ボタンをタップしました")
 
-            if (cursor!!.moveToFirst()) {
+            if (cursor!!.isLast) {
+                if (cursor!!.moveToFirst()) {
+                    // indexからIDを取得し、そのIDから画像のURIを取得する
+                    val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
+                    val id = cursor!!.getLong(fieldIndex)
+                    val imageUri =
+                        ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+
+                    binding.imageView.setImageURI(imageUri)
+                }
+            } else {
                 if (cursor!!.moveToNext()) {
                     // indexからIDを取得し、そのIDから画像のURIを取得する
                     val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
@@ -60,7 +70,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     binding.imageView.setImageURI(imageUri)
                 }
             }
-            cursor!!.close()
         }
 
         // 戻る
