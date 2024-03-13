@@ -47,8 +47,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         // 進む
         val button1 = findViewById<Button>(R.id.button1)
         button1.setOnClickListener{
-            Log.d("UI_PARTS", "ボタンをタップしました")
-
             if (cursor!!.isLast) {
                 if (cursor!!.moveToFirst()) {
                     // indexからIDを取得し、そのIDから画像のURIを取得する
@@ -75,7 +73,27 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         // 戻る
         val button2 = findViewById<Button>(R.id.button2)
         button2.setOnClickListener{
+            if (cursor!!.isLast) {
+                if (cursor!!.moveToFirst()) {
+                    // indexからIDを取得し、そのIDから画像のURIを取得する
+                    val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
+                    val id = cursor!!.getLong(fieldIndex)
+                    val imageUri =
+                        ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
 
+                    binding.imageView.setImageURI(imageUri)
+                }
+            } else {
+                if (cursor!!.moveToNext()) {
+                    // indexからIDを取得し、そのIDから画像のURIを取得する
+                    val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
+                    val id = cursor!!.getLong(fieldIndex)
+                    val imageUri =
+                        ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+
+                    binding.imageView.setImageURI(imageUri)
+                }
+            }
         }
 
         // 再生/停止
