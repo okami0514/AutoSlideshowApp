@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import jp.techacademy.youichi.okami.autoslideshowapp.databinding.ActivityMainBinding
@@ -103,15 +104,48 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
 
-        // 再生
+        // 再生/停止
         val button3 = findViewById<Button>(R.id.button3)
         button3.setOnClickListener{
-            // 進む、戻るボタン非活性
-            val button1 = findViewById<Button>(R.id.button1)
-            button1.isClickable = false
+            if (timer == null) {
+                timer = Timer()
+                timer!!.schedule(object : TimerTask() {
+                    override fun run() {
+                        handler.post {
+                            // 進む、戻るボタン非活性
+                            val button1 = findViewById<Button>(R.id.button1)
+                            button1.isClickable = false
 
-            val button2 = findViewById<Button>(R.id.button2)
-            button2.isClickable = false
+                            val button2 = findViewById<Button>(R.id.button2)
+                            button2.isClickable = false
+
+                            // 最後まで来たらあたまから
+                            if (!cursor!!.moveToNext()) {
+                                if (cursor!!.moveToFirst()) {
+                                    // indexからIDを取得し、そのIDから画像のURIを取得する
+                                    val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
+                                    val id = cursor!!.getLong(fieldIndex)
+                                    val imageUri =
+                                        ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+
+                                    binding.imageView.setImageURI(imageUri)
+                                }
+                            } else {
+                                if (cursor!!.moveToNext()) {
+                                    // indexからIDを取得し、そのIDから画像のURIを取得する
+                                    val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
+                                    val id = cursor!!.getLong(fieldIndex)
+                                    val imageUri =
+                                        ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+
+                                    binding.imageView.setImageURI(imageUri)
+                                }
+                            }
+                            Log.d("ANDROID", "test")
+                        }
+                    }
+                }, 2000, 2000)
+            }
         }
     }
 
