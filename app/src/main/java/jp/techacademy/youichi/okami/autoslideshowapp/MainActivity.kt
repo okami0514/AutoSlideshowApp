@@ -24,8 +24,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var cursor: Cursor? = null
 
     private var timer: Timer? = null
-    // タイマー用の時間のための変数
-    private var seconds = 0.0
+
     private var handler = Handler(Looper.getMainLooper())
 
     // APIレベルによって許可が必要なパーミッションを切り替える
@@ -107,20 +106,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         // 再生/停止
         val button3 = findViewById<Button>(R.id.button3)
         button3.setOnClickListener{
+            // 進む、戻るボタン非活性
+            val button1 = findViewById<Button>(R.id.button1)
+            button1.isClickable = false
+
+            val button2 = findViewById<Button>(R.id.button2)
+            button2.isClickable = false
+
             if (timer == null) {
+                button3.setText("停止")
                 timer = Timer()
                 timer!!.schedule(object : TimerTask() {
                     override fun run() {
                         handler.post {
-                            // 進む、戻るボタン非活性
-                            val button1 = findViewById<Button>(R.id.button1)
-                            button1.isClickable = false
-
-                            val button2 = findViewById<Button>(R.id.button2)
-                            button2.isClickable = false
-
                             // 最後まで来たらあたまから
-                            if (!cursor!!.moveToNext()) {
+                            if (cursor!!.isLast) {
                                 if (cursor!!.moveToFirst()) {
                                     // indexからIDを取得し、そのIDから画像のURIを取得する
                                     val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
@@ -145,6 +145,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         }
                     }
                 }, 2000, 2000)
+            } else {
+                button1.isClickable =  true
+                button2.isClickable = true
+                button3.setText("再生")
+                timer!!.cancel()
+                timer = null
             }
         }
     }
